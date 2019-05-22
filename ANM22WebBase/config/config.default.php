@@ -1,0 +1,1 @@
+<?php $anm22_wb_license="xxx"; $anm22_wb_licensePass="xxx"; $anm22_wb_license_source_mode="curl"; $anm22_wb_license_response_format="xml";
