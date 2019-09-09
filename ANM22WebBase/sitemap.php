@@ -5,12 +5,6 @@ include 'editor.php';
 /* -> SITEMAP CREATION */
 $languagesArray = array('en', 'it', 'de', 'es', 'fr', 'ru'); // WebBase languages
 $pageIndexObject = new com_anm22_wb_editor_pages_index(); // XML index creation
-// Check active languages
-foreach ($languagesArray as $languageSelected) {
-    if ($_SESSION['com_anm22_wb_website_settings']['wb_language_' . $languageSelected]) {
-        $pageIndexObject->languages[$languageSelected] = 1;
-    }
-}
 
 // Download pages index
 if ($xmlPagesIndex = simplexml_load_file("website/pages.xml")) {
@@ -114,9 +108,9 @@ if ($xmlPagesIndex) {
                 echo "<changefreq>weekly</changefreq>"
                         . "<priority>0.8</priority>";
                 
-                foreach ($languagesArray as $languageSelected) {
-                    if (isset($websitePages[$languageSelected][$xmlPagesIndexElement['id'].""])) {
-                        echo "<xhtml:link rel=\"alternate\" hreflang=\"".$languageSelected."\" href=\"".$urlPrefix.$languageSelected."/".$link."\" />";
+                foreach ($languagesArray as $connectedLanguageSelected) {
+                    if (isset($websitePages[$connectedLanguageSelected][$xmlPagesIndexElement['id'].""])) {
+                        echo "<xhtml:link rel=\"alternate\" hreflang=\"".$connectedLanguageSelected."\" href=\"".$urlPrefix.$connectedLanguageSelected."/".$link."\" />";
                     }
                 }
 
