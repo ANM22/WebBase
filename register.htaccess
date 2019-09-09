@@ -17,3 +17,13 @@ RewriteRule ^img/([^/-]*)-([^/.]+)/?$ gallery/$1.png [QSA]
 RewriteRule ^img-thumb/([^/-]*)/?$ gallery/$1_thumb.png [QSA]
 RewriteRule ^img-thumb/([^/-]*)-/?$ gallery/$1_thumb.png [QSA]
 RewriteRule ^img-thumb/([^/-]*)-([^/.]+)/?$ gallery/$1_thumb.png [QSA]
+
+RewriteRule ^img/([^/-]*)/img.png?$ gallery/$1.png [QSA]
+RewriteRule ^img/([^/-]*)-/img.png?$ gallery/$1.png [QSA]
+RewriteRule ^img/([^/-]*)-([^/.]+)/img.png?$ gallery/$1.png [QSA]
+RewriteRule ^img-thumb/([^/-]*)/img.png?$ gallery/$1_thumb.png [QSA]
+RewriteRule ^img-thumb/([^/-]*)-/img.png?$ gallery/$1_thumb.png [QSA]
+RewriteRule ^img-thumb/([^/-]*)-([^/.]+)/img.png?$ gallery/$1_thumb.png [QSA]
+
+RewriteRule ^robots.txt?$ ANM22WebBase/robots.php [QSA]
+RewriteRule ^sitemap.xml?$ ANM22WebBase/sitemap.php [QSA]
