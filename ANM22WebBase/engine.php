@@ -2,13 +2,13 @@
 
 /*
  * Author: ANM22
- * Last modified: 08 Jan 2017 - GMT +1 19:07
+ * Last modified: 23 Nov 2019 - GMT +1 15:47
  *
  * ANM22 Andrea Menghi all rights reserved
  *
  */
 
-$wb_engine_version = 6;
+$wb_engine_version = 7;
 
 $wb_command = $_GET['cmd'];
 
@@ -370,30 +370,39 @@ function wb_uploadFile($xml, $get, $post, $arg) {
             }
 
             // Thumb
+            $createThumbAsOriginal = false;
             if ($_GET['wb_cmd_thumb']) {
                 list($thumb_original_width, $thumb_original_height, $thumb_original_type, $thumb_original_attr) = getimagesize($_FILES['upl']['tmp_name']);
-                // Resizing
-                if (($_GET['wb_cmd_thumb_width'] / $_GET['wb_cmd_thumb_height']) >= ($thumb_original_width / $thumb_original_height)) {
-                    $thumb_width = $_GET['wb_cmd_thumb_width'];
-                    $thumb_height = $_GET['wb_cmd_thumb_width'] * $thumb_original_height / $thumb_original_width;
+                if (($thumb_original_width * $thumb_original_height) <= 8000000) {
+                    // Resizing
+                    if (($_GET['wb_cmd_thumb_width'] / $_GET['wb_cmd_thumb_height']) >= ($thumb_original_width / $thumb_original_height)) {
+                        $thumb_width = $_GET['wb_cmd_thumb_width'];
+                        $thumb_height = $_GET['wb_cmd_thumb_width'] * $thumb_original_height / $thumb_original_width;
+                    } else {
+                        $thumb_height = $_GET['wb_cmd_thumb_height'];
+                        $thumb_width = $_GET['wb_cmd_thumb_height'] * $thumb_original_width / $thumb_original_height;
+                    }
+                    // creation thumb
+                    $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
+                    if ($thumb_original_type == 1) {
+                        $source = imagecreatefromgif($_FILES['upl']['tmp_name']);
+                    }
+                    if ($thumb_original_type == 2) {
+                        $source = imagecreatefromjpeg($_FILES['upl']['tmp_name']);
+                    }
+                    if ($thumb_original_type == 3) {
+                        $source = imagecreatefrompng($_FILES['upl']['tmp_name']);
+                    }
+                    if (isset($source)) {
+                        imagecopyresized($thumb, $source, 0, 0, 0, 0, $thumb_width, $thumb_height, $thumb_original_width, $thumb_original_height);
+                        // saving thumb
+                        imagepng($thumb, "../" . $wb_cmd_path . $wb_cmd_thumb_fileName, 9);
+                    } else {
+                        $createThumbAsOriginal = true;
+                    }
                 } else {
-                    $thumb_height = $_GET['wb_cmd_thumb_height'];
-                    $thumb_width = $_GET['wb_cmd_thumb_height'] * $thumb_original_width / $thumb_original_height;
+                    $createThumbAsOriginal = true;
                 }
-                // creation thumb
-                $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
-                if ($thumb_original_type == 1) {
-                    $source = imagecreatefromgif($_FILES['upl']['tmp_name']);
-                }
-                if ($thumb_original_type == 2) {
-                    $source = imagecreatefromjpeg($_FILES['upl']['tmp_name']);
-                }
-                if ($thumb_original_type == 3) {
-                    $source = imagecreatefrompng($_FILES['upl']['tmp_name']);
-                }
-                imagecopyresized($thumb, $source, 0, 0, 0, 0, $thumb_width, $thumb_height, $thumb_original_width, $thumb_original_height);
-                // saving thumb
-                imagepng($thumb, "../" . $wb_cmd_path . $wb_cmd_thumb_fileName, 9);
             }
 
             if ($wb_cmd_selfName or ! $wb_cmd_fileName) {
@@ -403,6 +412,9 @@ function wb_uploadFile($xml, $get, $post, $arg) {
             }
 
             if (move_uploaded_file($_FILES['upl']['tmp_name'], '../' . $wb_cmd_path . $uploadedFileName)) {
+                if ($createThumbAsOriginal) {
+                    copy('../' . $wb_cmd_path . $uploadedFileName, '../' . $wb_cmd_path . $wb_cmd_thumb_fileName);
+                }
                 if ($xmlPrintState) {
                     $xml->addChild('RETURN', "1");
                 } else {
