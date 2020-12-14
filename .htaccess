@@ -1,5 +1,10 @@
 RewriteEngine On
 
+#Mono language mode
+#RewriteRule ^/?$ it/index.php?page=index [QSA]
+#RewriteRule ^([^/.]+)/?$ it/index.php?page=$1 [QSA]
+#RewriteRule ^([^/.]+)/([^/.]+)/?$ it/index.php?page=$1&sub=$2 [QSA]
+
 RewriteRule ^it/([^/.]+)/?$ it/index.php?page=$1 [QSA]
 RewriteRule ^it/([^/.]+)/([^/.]+)/?$ it/index.php?page=$1&sub=$2 [QSA]
 

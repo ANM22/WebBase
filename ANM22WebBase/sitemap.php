@@ -1,6 +1,7 @@
 <?php
 
 include 'editor.php';
+include 'config/license.php';
 
 /* -> SITEMAP CREATION */
 $languagesArray = array('en', 'it', 'de', 'es', 'fr', 'ru'); // WebBase languages
@@ -90,10 +91,11 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 echo "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">";
 
 if ($xmlPagesIndex) {
-    foreach ($languagesArray as $languageSelected) {
+    if (isset($anm22_wb_license_language_mode) and ($anm22_wb_license_language_mode == "mono")) {
+        $languageSelected = 'it';
         if ($websitePages[$languageSelected]) {
             foreach ($websitePages[$languageSelected] as $xmlPagesIndexElement) {
-                
+
                 $link = "";
                 if (((string) $xmlPagesIndexElement['link']) == "index") {
                     $link = "";
@@ -103,18 +105,40 @@ if ($xmlPagesIndex) {
 
                 echo "<url>";
 
-                echo "<loc>".$urlPrefix.$languageSelected."/".$link."</loc>";
-                // echo "<lastmod>2016-09-25</lastmod>";
+                echo "<loc>".$urlPrefix.$link."</loc>";
                 echo "<changefreq>weekly</changefreq>"
                         . "<priority>0.8</priority>";
-                
-                foreach ($languagesArray as $connectedLanguageSelected) {
-                    if (isset($websitePages[$connectedLanguageSelected][$xmlPagesIndexElement['id'].""])) {
-                        echo "<xhtml:link rel=\"alternate\" hreflang=\"".$connectedLanguageSelected."\" href=\"".$urlPrefix.$connectedLanguageSelected."/".$link."\" />";
-                    }
-                }
 
                 echo "</url>";
+            }
+        }
+    } else {
+        foreach ($languagesArray as $languageSelected) {
+            if ($websitePages[$languageSelected]) {
+                foreach ($websitePages[$languageSelected] as $xmlPagesIndexElement) {
+
+                    $link = "";
+                    if (((string) $xmlPagesIndexElement['link']) == "index") {
+                        $link = "";
+                    } else {
+                        $link = $xmlPagesIndexElement['link']."/";
+                    }
+
+                    echo "<url>";
+
+                    echo "<loc>".$urlPrefix.$languageSelected."/".$link."</loc>";
+                    // echo "<lastmod>2016-09-25</lastmod>";
+                    echo "<changefreq>weekly</changefreq>"
+                            . "<priority>0.8</priority>";
+
+                    foreach ($languagesArray as $connectedLanguageSelected) {
+                        if (isset($websitePages[$connectedLanguageSelected][$xmlPagesIndexElement['id'].""])) {
+                            echo "<xhtml:link rel=\"alternate\" hreflang=\"".$connectedLanguageSelected."\" href=\"".$urlPrefix.$connectedLanguageSelected."/".$link."\" />";
+                        }
+                    }
+
+                    echo "</url>";
+                }
             }
         }
     }

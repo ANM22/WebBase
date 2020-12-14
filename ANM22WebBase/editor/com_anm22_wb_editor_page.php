@@ -248,7 +248,12 @@ class com_anm22_wb_editor_page {
     }
 
     public function getHomeFolderRelativeHTMLURL() {
-        $url = "../" . $this->getLanguageHomeFolderRelativeHTMLURL();
+        include $url = $this->getHomeFolderRelativePHPURL()."ANM22WebBase/config/license.php";
+        if (isset($anm22_wb_license_language_mode) and ($anm22_wb_license_language_mode == "mono")) {
+            $url = $this->getLanguageHomeFolderRelativeHTMLURL();
+        } else {
+            $url = "../" . $this->getLanguageHomeFolderRelativeHTMLURL();
+        }
         return $url;
     }
 
