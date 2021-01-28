@@ -132,7 +132,7 @@ class com_anm22_wb_editor_page {
         if (file_exists($url)) {
             $this->xml = @simplexml_load_file($url);
         } else {
-            header("Location: ../404/");
+            header("Location: /404/");
             exit();
         }
         $this->importXML($this->xml);
@@ -167,6 +167,10 @@ class com_anm22_wb_editor_page {
     }
 
     public function show() {
+        // 404 Error code
+        if ($this->getPageLink() == '404') {
+            header("HTTP/1.0 404 Not Found");
+        }
         include "../ANM22WebBase/website/template/" . $this->theme . "/" . $this->template . ".php";
     }
 
@@ -263,7 +267,7 @@ class com_anm22_wb_editor_page {
 
     public function getLanguageHomeFolderRelativeHTMLURL() {
         $url = "";
-        if (($this->link != "index") and ( $this->link != "")) {
+        if (($this->link != "index") and ($this->link != "")) {
             $url .= "../";
         }
         if ($this->getPageSubLink()) {
