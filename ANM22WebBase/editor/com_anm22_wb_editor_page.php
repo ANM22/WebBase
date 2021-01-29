@@ -128,12 +128,16 @@ class com_anm22_wb_editor_page {
         }
     }
 
-    public function loadByXMLFile($url) {
+    public function loadByXMLFile($url, $language = null) {
         if (file_exists($url)) {
             $this->xml = @simplexml_load_file($url);
         } else {
-            header("Location: /404/");
-            exit();
+            $url = "../ANM22WebBase/website/" . $language . "/404.xml";
+            if (file_exists($url)) {
+                $this->xml = @simplexml_load_file($url);
+            } else {
+                exit();
+            }
         }
         $this->importXML($this->xml);
     }
@@ -142,7 +146,7 @@ class com_anm22_wb_editor_page {
         $this->getVariables = $get;
         $this->postVariables = $post;
         $url = "../ANM22WebBase/website/" . $lang . "/" . $page . ".xml";
-        $this->loadByXMLFile($url);
+        $this->loadByXMLFile($url, $lang);
     }
 
     public function pageShow($args) {

@@ -3,13 +3,13 @@
  * 
  * ANM22 Andrea Menghi all rights reserved
  *
- * v 2.8
+ * v 2.9
  *
  */
 
 class com_anm22_wb_editor {
 
-    public static $version = 2.8;
+    public static $version = 2.9;
 
     function getVersion() {
         return self::$version;
