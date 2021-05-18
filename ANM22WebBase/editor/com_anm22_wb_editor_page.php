@@ -195,22 +195,22 @@ class com_anm22_wb_editor_page {
         echo '<meta property="og:url" content="http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '"/>';
         echo '<meta name="twitter:url" content="http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '"/>';
         echo '<meta property="og:type" content="' . $this->og_type . '"/>';
-        if ($this->article_publisher and ( $this->article_publisher != "")) {
+        if ($this->article_publisher and ($this->article_publisher != "")) {
             echo '<meta property="article:publisher" content="' . $this->article_publisher . '"/>';
         }
-        if ($this->publisher and ( $this->publisher != "")) {
+        if ($this->publisher and ($this->publisher != "")) {
             echo '<link rel="publisher" href="' . $this->publisher . '"/>';
         }
-        if ($this->twitter_site and ( $this->twitter_site != "")) {
+        if ($this->twitter_site and ($this->twitter_site != "")) {
             echo '<meta name="twitter:site" content="' . $this->twitter_site . '"/>';
         }
-        if ($this->description and ( $this->description != "")) {
+        if ($this->description and ($this->description != "")) {
             echo '<meta property="og:description" content="' . $this->description . '"/>';
             echo '<meta name="description" content="' . $this->description . '"/>';
             echo '<meta itemprop="description" content="' . $this->description . '"/>';
             echo '<meta name="twitter:description" content="' . $this->description . '"/>';
         }
-        if ($this->image and ( $this->image != "")) {
+        if ($this->image and ($this->image != "")) {
             echo '<meta property="og:image" content="' . $this->image . '"/>';
             echo '<meta itemprop="image" content="' . $this->image . '"/>';
             echo '<meta name="twitter:image:src" content="' . $this->image . '"/>';
@@ -274,8 +274,10 @@ class com_anm22_wb_editor_page {
         if (($this->link != "index") and ($this->link != "")) {
             $url .= "../";
         }
-        if ($this->getPageSubLink()) {
-            $url .= "../";
+        for ($i=1;$i<=$this->getPageSubLinkNumber();$i++) {
+            if ($this->getPageSubLink($i)) {
+                $url .= "../";
+            }
         }
         return $url;
     }
@@ -296,12 +298,54 @@ class com_anm22_wb_editor_page {
         return $this->link;
     }
 
-    public function getPageSubLink() {
-        if (isset($this->getVariables['sub'])) {
-            return $this->getVariables['sub'];
+    /**
+     * Get permalink sub directory
+     * 
+     * @param integer $level Sub directory level
+     * @return string|null
+     */
+    public function getPageSubLink($level = 1) {
+        if ($level <= 1) {
+            if (isset($this->getVariables['sub'])) {
+                return $this->getVariables['sub'];
+            } else {
+                return null;
+            }
         } else {
-            return null;
+            if (isset($this->getVariables['sub'.$level])) {
+                return $this->getVariables['sub'.$level];
+            } else {
+                return null;
+            }
         }
+    }
+
+    /**
+     * Get last route subdirectory
+     * 
+     * @return string|null
+     */
+    public function getPageLastSubLink() {
+        for ($i = $this->getPageSubLinkNumber(); $i >= 1; $i--) {
+            if ($this->getPageSubLink($i)) {
+                return $this->getPageSubLink($i);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get number of route subdirectories
+     * 
+     * @return integer
+     */
+    public function getPageSubLinkNumber() {
+        for ($i = 3; $i >= 1; $i--) {
+            if ($this->getPageSubLink($i)) {
+                return $i;
+            }
+        }
+        return 0;
     }
 
     public function getLayoutContainerVisibility($container) {
