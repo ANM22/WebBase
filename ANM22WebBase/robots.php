@@ -7,7 +7,7 @@ if (!isset($_SERVER['HTTPS'])) {
 }
 
 $domain = $_SERVER['HTTP_HOST'];
-$wb_folder = trim(dirname($_SERVER[REQUEST_URI]));
+$wb_folder = trim(dirname($_SERVER['REQUEST_URI']));
 
 if ($wb_folder and ($wb_folder != "") and ($wb_folder != "/")) {
     $wb_folder.="/";
