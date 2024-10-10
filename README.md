@@ -2,7 +2,7 @@
 WebBase is a CMS to build your website. Install some plugins and templates or create new components developed in PHP.
 
 ## Version
-*	WebBase engine ![version](https://img.shields.io/badge/version-7-blue)
+*	WebBase engine ![version](https://img.shields.io/badge/version-10-blue)
 *	WebBase editor ![version](https://img.shields.io/badge/version-2.10-blue)
 
 ## WebBase System Requirements
