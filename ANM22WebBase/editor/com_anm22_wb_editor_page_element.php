@@ -1,29 +1,49 @@
 <?php
-class com_anm22_wb_editor_page_element {
+
+/**
+ * WebBase page element
+ */
+class com_anm22_wb_editor_page_element
+{
 
     var $id;
     var $elementClass = "com_anm22_wb_editor_page_element";
     var $elementPlugin = "com_anm22_wb_editor";
-    var $page;
+    var $page = null;
     var $defaultPageElement = false;
 
-    function getId() {
+    function getId()
+    {
         return $this->id;
     }
 
-    function setId($newId) {
+    function setId($newId)
+    {
         $this->id = $newId;
     }
 
-    function getElementClass() {
+    function getElementClass()
+    {
         return $this->elementClass;
     }
 
-    function getElementPlugin() {
+    function getElementPlugin()
+    {
         return $this->elementPlugin;
     }
 
-    function importXML($xml, $page) {
+    /**
+     * @deprecated since editor 3.0
+     * 
+     * Method to init element data by XML object.
+     * This method is deprecated and it will replaced with initData method.
+     * 
+     * @param SimpleXMLElement $xml Element data
+     * @param com_anm22_wb_editor_page $page Page
+     * @return void
+     */
+    function importXML($xml, $page)
+    {
         $this->id = $xml->id;
         $this->page = $page;
         $this->elementClass = $xml->elementClass;
@@ -31,29 +51,71 @@ class com_anm22_wb_editor_page_element {
         $this->importXMLdoJob($xml);
     }
 
-    function importXMLdoJob($xml) {
-        
+    /**
+     * @deprecated since editor 3.0
+     * 
+     * @param SimpleXMLElement $xml Element data
+     * @return void
+     */
+    function importXMLdoJob($xml) {}
+
+    /**
+     * Method to import and init element data
+     * 
+     * @param mixed[] $data Element data
+     * @param com_anm22_wb_editor_page $page Page
+     * @return void
+     */
+    function importData($data, $page)
+    {
+        $this->id = $data['id'];
+        $this->page = $page;
+        $this->elementClass = $data['elementClass'];
+        $this->elementPlugin = $data['elementPlugin'];
+        $this->initData($data);
     }
 
-    function show() {
-        
-    }
-    
-    
-    function getPage() {
+    /**
+     * Method to init element data
+     * 
+     * @param mixed[] $data Element data
+     * @return void
+     */
+    function initData($data) {}
+
+    /**
+     * Method to render the element
+     */
+    function show() {}
+
+    /**
+     * Get element parent page
+     * 
+     * @return com_anm22_wb_editor_page|null
+     */
+    function getPage()
+    {
         return $this->page;
     }
 
-    function setPage($page) {
+    /**
+     * Set element parent page
+     * 
+     * @param com_anm22_wb_editor_page|null $page Page
+     * @retutn void
+     */
+    function setPage($page)
+    {
         $this->page = $page;
     }
 
-    function getDefaultPageElement() {
+    function getDefaultPageElement()
+    {
         return $this->defaultPageElement;
     }
 
-    function setDefaultPageElement($defaultPageElement) {
+    function setDefaultPageElement($defaultPageElement)
+    {
         $this->defaultPageElement = $defaultPageElement;
     }
-
 }

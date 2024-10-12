@@ -1,23 +1,22 @@
 <?php
-/*
- * 
- * ANM22 Andrea Menghi all rights reserved
+
+/**
+ * ANM22 WebBase editor v 3.0
  *
- * v 2.10
- *
+ * @copyright 2024 Paname srl
  */
 
-class com_anm22_wb_editor {
+class com_anm22_wb_editor
+{
+    public static $version = 3.0;
 
-    public static $version = 2.10;
-
-    function getVersion() {
+    function getVersion()
+    {
         return self::$version;
     }
-
 }
 
-include_once '../ANM22WebBase/editor/com_anm22_wb_editor_pages_layer.php';
-include_once '../ANM22WebBase/editor/com_anm22_wb_editor_pages_index.php';
-include_once '../ANM22WebBase/editor/com_anm22_wb_editor_page.php';
-include_once '../ANM22WebBase/editor/com_anm22_wb_editor_page_element.php';
+include_once __DIR__ . '/editor/com_anm22_wb_editor_pages_layer.php';
+include_once __DIR__ . '/editor/com_anm22_wb_editor_pages_index.php';
+include_once __DIR__ . '/editor/com_anm22_wb_editor_page.php';
+include_once __DIR__ . '/editor/com_anm22_wb_editor_page_element.php';

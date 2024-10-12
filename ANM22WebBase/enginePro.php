@@ -70,6 +70,9 @@ switch ($httpMethod) {
             case 'deleteFile':
                 WebBaseEnginePro::deleteFile();
                 break;
+            case 'convertXmlToJson':
+                WebBaseEnginePro::convertXmlToJson();
+                break;
             case 'runQuery':
                 WebBaseEnginePro::runQuery();
                 break;
@@ -140,7 +143,7 @@ class WebBaseEnginePro
         $response["path"] = $path;
 
         $path = "../" . $path;
-        
+
         $count = 0;
         if ($handle = opendir($path)) {
             while (false !== ($file = readdir($handle))) {
@@ -365,7 +368,7 @@ class WebBaseEnginePro
         }
         $path = urldecode($path);
         $response["path"] = $path;
-        $path = "../" . $path;        
+        $path = "../" . $path;
 
         if ($handle = opendir($path)) {
             while (false !== ($file = readdir($handle))) {
@@ -548,6 +551,52 @@ class WebBaseEnginePro
             }
             exit();
         }
+    }
+
+    /**
+     * Convert XML file to Json
+     */
+    public static function convertXmlToJson()
+    {
+        $response = [];
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        $path = $payload['path'] ?? null;
+        if (!$path) {
+            http_response_code(400);
+            echo json_encode(["error" => "Missing file path parameter"]);
+            exit();
+        }
+        $response["originalFile"] = $path;
+        $path = "../" . $path;
+
+        if (!file_exists($path)) {
+            http_response_code(404);
+            echo json_encode(["error" => "File not found"]);
+            exit();
+        }
+
+        require_once __DIR__ . "/editor/WebBaseXmlLogics.php";
+
+        $xmlObject = @simplexml_load_file($path);
+
+        if ($path == "../ANM22WebBase/website/pages.xml") { 
+            $assoc = WebBaseXmlLogics::pagesIndexXmlToAssoc($xmlObject);
+            $response["converterEngine"] = "pagesIndex";
+        } else {
+            $assoc = WebBaseXmlLogics::xmlToAssoc($xmlObject);
+            $response["converterEngine"] = "standard";
+        }
+
+        $newPath = substr($path, 0, strlen($path) - 4) . ".json";
+
+        $response["newFile"] = $newPath;
+
+        $response["result"] = file_put_contents($newPath, json_encode($assoc));
+        chmod($newPath, 0755);
+
+        echo json_encode($response);
     }
 
     /**
