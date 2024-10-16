@@ -11,6 +11,8 @@ class com_anm22_wb_editor_page
     public $id;
     public $name;
     public $link;
+    public $canonicalDomain;
+    public $canonicalRequestUri;
     public $title;
     public $language;
     public $state;
@@ -42,9 +44,10 @@ class com_anm22_wb_editor_page
     public $description;
     public $image;
     public $twitter_card = "summary_large_image";
+    public $noIndex = false;
 
     /**
-     * @deprecated 
+     * @deprecated since editor 3.0
      * 
      * Init the page data from XML file
      * 
@@ -176,6 +179,7 @@ class com_anm22_wb_editor_page
         $this->description = $data['description'];
         $this->image = $data['image'];
         $this->twitter_card = $data['twitter_card'];
+        $this->noIndex = $data['noIndex'] ?? false;
 
         $defaultPageJsonUrl = "../ANM22WebBase/website/" . $this->language . "/default.json";
         if (file_exists($defaultPageJsonUrl)) {
@@ -184,6 +188,13 @@ class com_anm22_wb_editor_page
             $defaultPageXMLUrl = "../ANM22WebBase/website/" . $this->language . "/default.xml";
             $xmlDefaultPage = @simplexml_load_file($defaultPageXMLUrl);
             $this->defaultPage = WebBaseXmlLogics::xmlToAssoc($xmlDefaultPage);
+        }
+
+        // Set canonical URL
+        $this->canonicalDomain = "https://" . $_SERVER['HTTP_HOST'];
+        $this->canonicalRequestUri = $this->language . "/";
+        if ($this->link != "index") {
+            $this->canonicalRequestUri .= $this->link . "/";
         }
 
         /* Template Inline Styles */
@@ -347,20 +358,23 @@ class com_anm22_wb_editor_page
     public function getHead()
     {
         echo "<title>";
-        if ($this->site_name && ($this->site_name != "")) {
-            echo $this->site_name . " - ";
-        }
         echo $this->title;
+        if ($this->site_name && ($this->site_name != "")) {
+            echo " | " . $this->site_name;
+        }
         echo "</title>";
-        echo '<meta name="robots" content="index, follow">';
+        if (!$this->noIndex) {
+            echo '<meta name="robots" content="index, follow">';
+        }
+        echo '<link rel="canonical" href="' . $this->getCanonicalUrl() . '"/>';
         if ($this->site_name && ($this->site_name != "")) {
             echo '<meta property="og:site_name" content="' . $this->site_name . '"/>';
         }
         echo '<meta property="og:title" content="' . $this->title . '"/>';
         echo '<meta itemprop="name" content="' . $this->title . '"/>';
         echo '<meta name="twitter:title" content="' . $this->title . '"/>';
-        echo '<meta property="og:url" content="http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '"/>';
-        echo '<meta name="twitter:url" content="http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '"/>';
+        echo '<meta property="og:url" content="' . $this->getCanonicalUrl() . '"/>';
+        echo '<meta name="twitter:url" content="' . $this->getCanonicalUrl() . '"/>';
         if ($this->og_type) {
             echo '<meta property="og:type" content="' . $this->og_type . '"/>';
         }
@@ -571,5 +585,14 @@ class com_anm22_wb_editor_page
     {
         $this->headContent .= $code;
         return $this;
+    }
+
+    /**
+     * Methot to get the canonical page URL
+     * 
+     * @return string
+     */
+    public function getCanonicalUrl() {
+        return $this->canonicalDomain . "/" . $this->canonicalRequestUri;
     }
 }

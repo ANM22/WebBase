@@ -8,9 +8,12 @@
 
 class com_anm22_wb_editor
 {
-    public static $version = 3.0;
+    public static $version = "3.0.1";
 
-    function getVersion()
+    /**
+     * Method to get the editor version number
+     */
+    public function getVersion()
     {
         return self::$version;
     }
