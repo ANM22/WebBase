@@ -8,7 +8,7 @@
 
 class com_anm22_wb_editor
 {
-    public static $version = "3.0.1";
+    public static $version = "3.0.2";
 
     /**
      * Method to get the editor version number

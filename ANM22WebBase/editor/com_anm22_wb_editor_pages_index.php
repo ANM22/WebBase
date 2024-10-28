@@ -6,10 +6,11 @@
 class com_anm22_wb_editor_pages_index
 {
 
-    var $lastId = 0;
-    var $pages = [];
-    var $layers = [];
-    var $languages = [];
+    public $lastId = 0;
+    public $pages = [];
+    public $layers = [];
+    public $languages = [];
+    public $domain = null;
 
     /**
      * @deprecated 
@@ -43,6 +44,9 @@ class com_anm22_wb_editor_pages_index
      */
     public function initData($data)
     {
+        if (isset($data['domain']) && $data['domain']) {
+            $this->domain = $data['domain'];
+        }
         $this->lastId = intval($data['lastId']);
         foreach ($data['languages'] as $item) {
             $this->languages[$item['language'] . ""] = $item['value'];
