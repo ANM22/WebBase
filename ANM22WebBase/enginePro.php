@@ -4,7 +4,6 @@
  * CMS API endpoint
  *
  * @author Andrea Menghi <andrea.menghi@anm22.it>
- * @copyright 2024 Paname srl
  */
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

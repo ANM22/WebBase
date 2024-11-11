@@ -1,23 +1,20 @@
 <?php
 
-/*
- * Author: ANM22
- * Last modified: 23 Nov 2019 - GMT +1 15:47
+/**
+ * CMS API endpoint legacy
  *
- * ANM22 Andrea Menghi all rights reserved
- *
+ * @author Andrea Menghi <andrea.menghi@anm22.it>
  */
 
-$wb_engine_version = 7;
+$wb_engine_version = 8;
 
 $wb_command = $_GET['cmd'];
 
-if (isset($_GET['xmlPrintDisable']) or isset($_POST['xmlPrintDisable'])) {
+if (isset($_GET['xmlPrintDisable']) || isset($_POST['xmlPrintDisable'])) {
 
     $commandArg = array('xmlPrintDisable' => 1);
 
     @$wb_command($xml, $_GET, $_POST, $commandArg);
-    
 } else {
 
     $xml = new SimpleXMLElement('<xml/>');
@@ -49,7 +46,8 @@ if (isset($_GET['xmlPrintDisable']) or isset($_POST['xmlPrintDisable'])) {
 
 /* Engine functions */
 
-function wb_engineVersion($xml, $get, $post, $arg) {
+function wb_engineVersion($xml, $get, $post, $arg)
+{
 
     global $wb_engine_version;
 
@@ -63,17 +61,18 @@ function wb_engineVersion($xml, $get, $post, $arg) {
 
 /* Connection functions */
 
-function checkConnection($xml, $get, $post, $arg) {
+function checkConnection($xml, $get, $post, $arg)
+{
 
     include "config/license.php";
 
-    if ($arg['xmlPrintDisable'] or $get['xmlPrintDisable'] or $post['xmlPrintDisable']) {
+    if ($arg['xmlPrintDisable'] ?? false || $get['xmlPrintDisable'] ?? false || $post['xmlPrintDisable'] ?? false) {
         $xmlPrintState = 0;
     } else {
         $xmlPrintState = 1;
     }
 
-    if ($get['license'] == $anm22_wb_license and $get['licensePass'] == $anm22_wb_licensePass) {
+    if (($get['license'] ?? null) == $anm22_wb_license && ($get['licensePass'] ?? null) == $anm22_wb_licensePass) {
         if ($xmlPrintState) {
             $xml->addChild('CONNECTION', "1");
         }
@@ -86,7 +85,8 @@ function checkConnection($xml, $get, $post, $arg) {
     }
 }
 
-function wb_testConnection($xml, $get, $post, $arg) {
+function wb_testConnection($xml, $get, $post, $arg)
+{
     if (checkConnection($xml, $get, $post, '')) {
         $xml->addChild('RETURN', "1");
     } else {
@@ -96,7 +96,8 @@ function wb_testConnection($xml, $get, $post, $arg) {
 
 /* File functions */
 
-function contafile($dir) {
+function contafile($dir)
+{
     $count = 0;
     if ($handle = opendir($dir)) {
         while (false !== ($file = readdir($handle))) {
@@ -107,7 +108,8 @@ function contafile($dir) {
     }
 }
 
-function wb_countFiles($xml, $get, $post, $arg) {
+function wb_countFiles($xml, $get, $post, $arg)
+{
     if (checkConnection($xml, $get, $post, '')) {
         $path = "../" . $get['path'];
         $xml->addChild('RETURN', @contafile($path));
@@ -116,7 +118,8 @@ function wb_countFiles($xml, $get, $post, $arg) {
     }
 }
 
-function wb_createFile($xml, $get, $post, $arg) {
+function wb_createFile($xml, $get, $post, $arg)
+{
     if (checkConnection($xml, $get, $post, '')) {
 
         include "config/license.php";
@@ -162,28 +165,32 @@ function wb_createFile($xml, $get, $post, $arg) {
     }
 }
 
-function wb_createFileGET($xml, $get, $post, $arg) {
+function wb_createFileGET($xml, $get, $post, $arg)
+{
     $post['wb_cmd_path'] = $get['wb_cmd_path'];
     $post['wb_cmd_fileName'] = $get['wb_cmd_fileName'];
     $post['wb_cmd_content'] = $get['wb_cmd_content'];
     wb_createFile($xml, $get, $post, $arg);
 }
 
-function wb_createFileGETUrlencode($xml, $get, $post, $arg) {
+function wb_createFileGETUrlencode($xml, $get, $post, $arg)
+{
     $post['wb_cmd_path'] = $get['wb_cmd_path'];
     $post['wb_cmd_fileName'] = $get['wb_cmd_fileName'];
     $post['wb_cmd_content'] = urldecode($get['wb_cmd_content']);
     wb_createFile($xml, $get, $post, $arg);
 }
 
-function wb_createFileLinkSource($xml, $get, $post, $arg) {
+function wb_createFileLinkSource($xml, $get, $post, $arg)
+{
     $post['wb_cmd_path'] = $get['wb_cmd_path'];
     $post['wb_cmd_fileName'] = $get['wb_cmd_fileName'];
     $post['wb_cmd_source'] = urldecode($get['wb_cmd_source']);
     wb_createFile($xml, $get, $post, array('source' => 1));
 }
 
-function wb_delete($xml, $get, $post, $arg) {
+function wb_delete($xml, $get, $post, $arg)
+{
     if (checkConnection($xml, $get, $post, '')) {
         $fileName = "../" . $_GET['wb_cmd_filename'];
         if (@file_exists($fileName) && @is_file($fileName)) {
@@ -207,7 +214,8 @@ function wb_delete($xml, $get, $post, $arg) {
     }
 }
 
-function wb_file_exists($xml, $get, $post, $arg) {
+function wb_file_exists($xml, $get, $post, $arg)
+{
     if (checkConnection($xml, $get, $post, '')) {
         $fileName = $_GET['filename'];
         if (@file_exists($fileName)) {
@@ -220,7 +228,8 @@ function wb_file_exists($xml, $get, $post, $arg) {
     }
 }
 
-function wb_file_get_contents($xml, $get, $post, $arg) {
+function wb_file_get_contents($xml, $get, $post, $arg)
+{
     $checkConnectionArg = array('xmlPrintDisable' => 1);
     if (checkConnection($xml, $get, $post, $checkConnectionArg)) {
         $path = "../" . $get['wb_cmd_fullpath'];
@@ -228,12 +237,14 @@ function wb_file_get_contents($xml, $get, $post, $arg) {
     }
 }
 
-function wb_file_get_contents_Urlencode($xml, $get, $post, $arg) {
+function wb_file_get_contents_Urlencode($xml, $get, $post, $arg)
+{
     $get['wb_cmd_fullpath'] = urldecode($get['wb_cmd_fullpath']);
     wb_file_get_contents($xml, $get, $post, $arg);
 }
 
-function wb_l($xml, $get, $post, $arg) {
+function wb_l($xml, $get, $post, $arg)
+{
     if (checkConnection($xml, $get, $post, '')) {
         $path = $get['wb_cmd_path'];
         if ($handle = opendir($path)) {
@@ -264,7 +275,8 @@ function wb_l($xml, $get, $post, $arg) {
     }
 }
 
-function wb_mkdir($xml, $get, $post, $arg) {
+function wb_mkdir($xml, $get, $post, $arg)
+{
     if (checkConnection($xml, $get, $post, '')) {
         $path = "../" . $get['wb_cmd_path'];
         if (@mkdir($path, 0755)) {
@@ -277,7 +289,8 @@ function wb_mkdir($xml, $get, $post, $arg) {
     }
 }
 
-function wb_rename($xml, $get, $post, $arg) {
+function wb_rename($xml, $get, $post, $arg)
+{
     if (checkConnection($xml, $get, $post, '')) {
         $newName = $get['newname'];
         $oldName = $get['oldname'];
@@ -293,7 +306,8 @@ function wb_rename($xml, $get, $post, $arg) {
     }
 }
 
-function wb_rmdir($xml, $get, $post, $arg) {
+function wb_rmdir($xml, $get, $post, $arg)
+{
     if (checkConnection($xml, $get, $post, '')) {
         $path = $get['path'];
         if (@rmdir($path)) {
@@ -306,7 +320,8 @@ function wb_rmdir($xml, $get, $post, $arg) {
     }
 }
 
-function wb_unlink($xml, $get, $post, $arg) {
+function wb_unlink($xml, $get, $post, $arg)
+{
     if (checkConnection($xml, $get, $post, '')) {
         $path = $get['path'];
         if (@unlink($path)) {
@@ -321,13 +336,14 @@ function wb_unlink($xml, $get, $post, $arg) {
 
 /* File Upload */
 
-function wb_uploadFile($xml, $get, $post, $arg) {
+function wb_uploadFile($xml, $get, $post, $arg)
+{
 
-    if ($arg['xmlPrintDisable'] or $get['xmlPrintDisable'] or $post['xmlPrintDisable']) {
+    if ($arg['xmlPrintDisable'] ?? false || $get['xmlPrintDisable'] ?? false || $post['xmlPrintDisable'] ?? false) {
         $checkConnectionArg = array('xmlPrintDisable' => 1);
         $xmlPrintState = 0;
         $XHRTool = 1;
-    } else if ($arg['xmlHeaderLocation'] or $get['xmlHeaderLocation'] or $post['xmlHeaderLocation']) {
+    } else if ($arg['xmlHeaderLocation'] ?? false || $get['xmlHeaderLocation'] ?? false || $post['xmlHeaderLocation'] ?? false) {
         $checkConnectionArg = array('xmlPrintDisable' => 1);
         $xmlPrintState = 0;
         $xmlHeaderLocation = urldecode($get['xmlHeaderLocation']);
@@ -455,7 +471,8 @@ function wb_uploadFile($xml, $get, $post, $arg) {
 
 /* MySQL functions */
 
-function wb_mysql_read($xml, $get, $post, $arg) {
+function wb_mysql_read($xml, $get, $post, $arg)
+{
     if (checkConnection($xml, $get, $post, '')) {
 
         include "config/license.php";
@@ -495,7 +512,8 @@ function wb_mysql_read($xml, $get, $post, $arg) {
     }
 }
 
-function wb_mysql_write($xml, $get, $post, $arg) {
+function wb_mysql_write($xml, $get, $post, $arg)
+{
     if (checkConnection($xml, $get, $post, '')) {
 
         include "config/license.php";
