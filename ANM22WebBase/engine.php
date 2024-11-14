@@ -77,6 +77,11 @@ function checkConnection($xml, $get, $post, $arg)
             $xml->addChild('CONNECTION', "1");
         }
         return true;
+    } else if (isset($get['license']) && $get['license'] && isset($anm22_wb_licenses[$get['license']]) && ($get['licensePass'] ?? null) == $anm22_wb_licenses[$get['license']]['licensePass']) {
+        if ($xmlPrintState) {
+            $xml->addChild('CONNECTION', "1");
+        }
+        return true;
     } else {
         if ($xmlPrintState) {
             $xml->addChild('CONNECTION', "0");
