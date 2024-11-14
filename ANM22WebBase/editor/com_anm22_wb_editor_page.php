@@ -206,7 +206,7 @@ class com_anm22_wb_editor_page
         /* Template Page Options */
         if ($data['pageOptions']) {
             foreach ($data['pageOptions'] as $option) {
-                $this->pageOptions[$option->name . ""] = $option;
+                $this->pageOptions[$option['name'] . ""] = $option;
             }
         }
 

@@ -3,12 +3,12 @@
 /**
  * ANM22 WebBase editor v 3.0
  *
- * @copyright 2024 Paname srl
+ * @author Andrea Menghi <andrea.menghi@anm22.it>
  */
 
 class com_anm22_wb_editor
 {
-    public static $version = "3.0.2";
+    public static $version = "3.0.3";
 
     /**
      * Method to get the editor version number

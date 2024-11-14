@@ -4,7 +4,7 @@ WebBase is a CMS to build your website. Install some plugins and templates or cr
 ## Version
 *	WebBase engine ![version](https://img.shields.io/badge/version-10-blue)
 *	WebBase engine (legacy) ![version](https://img.shields.io/badge/version-8-blue)
-*	WebBase editor ![version](https://img.shields.io/badge/version-3.0.2-blue)
+*	WebBase editor ![version](https://img.shields.io/badge/version-3.0.3-blue)
 
 ## WebBase System Requirements
 [WebBase System Requirements](https://www.anm22.it/it/webbase-developers/).
