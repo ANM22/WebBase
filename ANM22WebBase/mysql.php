@@ -1,18 +1,19 @@
 <?php
-/*
- * Author: ANM22
- * Last modified: 27 Nov 2019 - GMT +1 17:53
+/**
+ * ANM22 WebBase engine MySQL endpoint
  *
- * ANM22 Andrea Menghi all rights reserved
- *
+ * @author Andrea Menghi <andrea.menghi@anm22.it>
  */
 
-$dataMode = $_GET['dm'];
+require_once __DIR__ . "/editor/WebBaseEnginePro.php";
+require_once __DIR__ . '/editor/WebBaseDatabase.php';
+
+$dataMode = $_GET['dm'] ?? "post";
 if (!$dataMode) {
     $dataMode = "post";
 }
 
-if (checkConnection()) {
+if (WebBaseEnginePro::verifyAuth()) {
     if ($dataMode == "get") {
         $action = $_GET['a'];
     } else {
@@ -20,7 +21,7 @@ if (checkConnection()) {
     }
 
     if (!trim($action)) {
-        $result = array();
+        $result = [];
         $result['result'] = 0;
         $result['error'] = "No action command";
         echo json_encode($result);
@@ -31,58 +32,53 @@ if (checkConnection()) {
     echo json_encode($result);
     exit;
 } else {
-    $result = array();
+    $result = [];
     $result['result'] = 0;
     $result['error'] = "Wrong license key";
     echo json_encode($result);
     exit;
 }
 
-/* Controllo chiavi licenza */
-function checkConnection() {
-    global $dataMode;
-
-    include "config/license.php";
-
-    if ($dataMode == "get") {
-        $get = $_GET;
-    } else {
-        $get = $_POST;
-    }
-
-    if (($get['license'] == $anm22_wb_license) and ($get['licensePass'] == $anm22_wb_licensePass)) {
-        return 1;
-    } else {
-        return 0;
-    }
+/**
+ * @deprecated since WebBase editor v3.1
+ * 
+ * Open DB connection.
+ * 
+ * @return WebBaseDatabase
+ */
+function dbConnect()
+{
+    $db = new WebBaseDatabase();
+    $db->connect();
+    return $db;
 }
 
-/* Connessione database */
-function dbConnect() {
-    include "config/mysql.php";
-
-    if ($mysqlConnection = @mysql_connect($db_host, $db_user,$db_pass)) {
-        return @mysql_select_db($db_name, $mysqlConnection);
-    } else {
-        return 0;
-    }
-}
-
-/* Disconessione database */
-function dbClose() {
-    return @mysql_close();
+/**
+ * @deprecated since WebBase editor v3.1
+ * 
+ * Close DB connection
+ * 
+ * @param WebBaseDatabase $db Database connection
+ * @return void
+ */
+function dbClose($db)
+{
+    return $db->close();
 }
 
 
 /* Query INSERT */
-function queryInsert() {
+function queryInsert()
+{
     global $dataMode;
 
-    $result = array();
+    $result = [];
     $result['dataMode'] = $dataMode;
     $result['action'] = "queryInsert";
 
-    if (dbConnect()) {
+    $db = new WebBaseDatabase();
+
+    if ($db->connect()) {
 
         if ($dataMode == "get") {
             $query = $_GET['q'];
@@ -92,15 +88,15 @@ function queryInsert() {
 
         $result['query'] = $query;
 
-        if ($mysqlResult = @mysql_query($query)) {
+        if ($mysqlResult = $db->query($query)) {
             $result['result'] = 1;
-            $result['insertId'] = @mysql_insert_id();
+            $result['insertId'] = $db->insert_id;
         } else {
             $result['result'] = 0;
-            $result['error'] = mysql_error();
+            $result['error'] = "";
         }
 
-        dbClose();
+        $db->close();
     } else {
         $result['return'] = 0;
     }
@@ -109,22 +105,27 @@ function queryInsert() {
 }
 
 /* Query UPDATE */
-function queryUpdate() {
+function queryUpdate()
+{
     return queryNoReturn();
 }
 
 /* Query DELETE */
-function queryDelete() {
+function queryDelete()
+{
     return queryNoReturn();
 }
 
 /* Query without return data */
-function queryNoReturn() {
+function queryNoReturn()
+{
     global $dataMode;
 
-    if (dbConnect()) {
+    $db = new WebBaseDatabase();
 
-        $result = array();
+    if ($db->connect()) {
+
+        $result = [];
         $result['dataMode'] = $dataMode;
         $result['action'] = "queryUpdate";
 
@@ -136,25 +137,28 @@ function queryNoReturn() {
 
         $result['query'] = $query;
 
-        if ($mysqlResult = @mysql_query($query)) {
+        if ($mysqlResult = $db->query($query)) {
             $result['result'] = 1;
         } else {
             $result['result'] = 0;
-            $result['error'] = mysql_error();
+            $result['error'] = "";
         }
 
-        dbClose();
+        $db->close();
         return $result;
     }
 }
 
 /* Query SELECT */
-function querySelect() {
+function querySelect()
+{
     global $dataMode;
 
-    if (dbConnect()) {
+    $db = new WebBaseDatabase();
 
-        $result = array();
+    if ($db->connect()) {
+
+        $result = [];
         $result['dataMode'] = $dataMode;
         $result['action'] = "querySelect";
 
@@ -166,22 +170,20 @@ function querySelect() {
 
         $result['query'] = $query;
 
-        if ($mysqlResult = @mysql_query($query)) {
-            $result['result'] = 1;
-            $result['data'] = array();
-            while ($row = @mysql_fetch_array($mysqlResult)) {
-                $result['data'][] = $row;
-            }
-            $result['numberRows'] = @mysql_num_rows($mysqlResult);
-        } else {
+        $queryResult = $db->makeQueryAssoc($query);
+        if ($queryResult === false) {
             $result['result'] = 0;
-            $result['error'] = mysql_error();
+            $result['error'] = "";
+        } else {
+            $result['result'] = 1;
+            $result['data'] = $queryResult;
+            $result['numberRows'] = count($queryResult);
         }
 
-        dbClose();
+        $db->close();
         return $result;
     } else {
         $result['result'] = 0;
-        $result['error'] = "Mysql connect error: " . mysql_error();
+        $result['error'] = "Mysql connect error";
     }
 }

@@ -6,7 +6,7 @@
  * @author Andrea Menghi <andrea.menghi@anm22.it>
  */
 
-$wb_engine_version = 8;
+$wb_engine_version = 8.1;
 
 $wb_command = $_GET['cmd'];
 
