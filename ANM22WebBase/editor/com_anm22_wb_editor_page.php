@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . "/WebBaseDatabase.php";
 require_once __DIR__ . "/WebBaseXmlLogics.php";
 
 /**
@@ -45,6 +46,9 @@ class com_anm22_wb_editor_page
     public $image;
     public $twitter_card = "summary_large_image";
     public $noIndex = false;
+
+    /* Database */
+    public $database = null;
 
     /**
      * @deprecated since editor 3.0
@@ -588,11 +592,29 @@ class com_anm22_wb_editor_page
     }
 
     /**
-     * Methot to get the canonical page URL
+     * Method to get the canonical page URL
      * 
      * @return string
      */
-    public function getCanonicalUrl() {
+    public function getCanonicalUrl()
+    {
         return $this->canonicalDomain . "/" . $this->canonicalRequestUri;
+    }
+
+    /**
+     * Method to get the database connection.
+     * 
+     * @param bool $connect Open connection if it is closed.
+     * @return WebBaseDatabase|null
+     */
+    public function getDatabase($connect = true)
+    {
+        if (!$this->database && $connect) {
+            $db = new WebBaseDatabase();
+            $db->connect();
+            $this->database = $db;
+        }
+
+        return $this->database;
     }
 }
