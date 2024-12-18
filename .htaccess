@@ -5,15 +5,35 @@ RewriteEngine On
 #RewriteRule ^([^/.]+)/?$ it/index.php?page=$1 [QSA]
 #RewriteRule ^([^/.]+)/([^/.]+)/?$ it/index.php?page=$1&sub=$2 [QSA]
 
-RewriteRule ^it/([^/.]+)/?$ it/index.php?page=$1 [QSA]
-RewriteRule ^it/([^/.]+)/([^/.]+)/?$ it/index.php?page=$1&sub=$2 [QSA]
-RewriteRule ^it/([^/.]+)/([^/.]+)/([^/.]+)/?$ it/index.php?page=$1&sub=$2&sub2=$3 [QSA]
-RewriteRule ^it/([^/.]+)/([^/.]+)/([^/.]+)/([^/.]+)/?$ it/index.php?page=$1&sub=$2&sub2=$3&sub3=$4 [QSA]
+RewriteRule ^de/([^/.]+)/?$ de/index.php?page=$1 [QSA]
+RewriteRule ^de/([^/.]+)/([^/.]+)/?$ de/index.php?page=$1&sub=$2 [QSA]
+RewriteRule ^de/([^/.]+)/([^/.]+)/([^/.]+)/?$ de/index.php?page=$1&sub=$2&sub2=$3 [QSA]
+RewriteRule ^de/([^/.]+)/([^/.]+)/([^/.]+)/([^/.]+)/?$ de/index.php?page=$1&sub=$2&sub2=$3&sub3=$4 [QSA]
 
 RewriteRule ^en/([^/.]+)/?$ en/index.php?page=$1 [QSA]
 RewriteRule ^en/([^/.]+)/([^/.]+)/?$ en/index.php?page=$1&sub=$2 [QSA]
 RewriteRule ^en/([^/.]+)/([^/.]+)/([^/.]+)/?$ en/index.php?page=$1&sub=$2&sub2=$3 [QSA]
 RewriteRule ^en/([^/.]+)/([^/.]+)/([^/.]+)/([^/.]+)/?$ en/index.php?page=$1&sub=$2&sub2=$3&sub3=$4 [QSA]
+
+RewriteRule ^es/([^/.]+)/?$ es/index.php?page=$1 [QSA]
+RewriteRule ^es/([^/.]+)/([^/.]+)/?$ es/index.php?page=$1&sub=$2 [QSA]
+RewriteRule ^es/([^/.]+)/([^/.]+)/([^/.]+)/?$ es/index.php?page=$1&sub=$2&sub2=$3 [QSA]
+RewriteRule ^es/([^/.]+)/([^/.]+)/([^/.]+)/([^/.]+)/?$ es/index.php?page=$1&sub=$2&sub2=$3&sub3=$4 [QSA]
+
+RewriteRule ^fr/([^/.]+)/?$ fr/index.php?page=$1 [QSA]
+RewriteRule ^fr/([^/.]+)/([^/.]+)/?$ fr/index.php?page=$1&sub=$2 [QSA]
+RewriteRule ^fr/([^/.]+)/([^/.]+)/([^/.]+)/?$ fr/index.php?page=$1&sub=$2&sub2=$3 [QSA]
+RewriteRule ^fr/([^/.]+)/([^/.]+)/([^/.]+)/([^/.]+)/?$ fr/index.php?page=$1&sub=$2&sub2=$3&sub3=$4 [QSA]
+
+RewriteRule ^it/([^/.]+)/?$ it/index.php?page=$1 [QSA]
+RewriteRule ^it/([^/.]+)/([^/.]+)/?$ it/index.php?page=$1&sub=$2 [QSA]
+RewriteRule ^it/([^/.]+)/([^/.]+)/([^/.]+)/?$ it/index.php?page=$1&sub=$2&sub2=$3 [QSA]
+RewriteRule ^it/([^/.]+)/([^/.]+)/([^/.]+)/([^/.]+)/?$ it/index.php?page=$1&sub=$2&sub2=$3&sub3=$4 [QSA]
+
+RewriteRule ^ru/([^/.]+)/?$ ru/index.php?page=$1 [QSA]
+RewriteRule ^ru/([^/.]+)/([^/.]+)/?$ ru/index.php?page=$1&sub=$2 [QSA]
+RewriteRule ^ru/([^/.]+)/([^/.]+)/([^/.]+)/?$ ru/index.php?page=$1&sub=$2&sub2=$3 [QSA]
+RewriteRule ^ru/([^/.]+)/([^/.]+)/([^/.]+)/([^/.]+)/?$ ru/index.php?page=$1&sub=$2&sub2=$3&sub3=$4 [QSA]
 
 RewriteRule ^mail/([^/.]+)/?$ mail/index.php?page=$1 [QSA]
 RewriteRule ^mail/([^/.]+)/([^/.]+)/?$ mail/index.php?page=$1&sub=$2 [QSA]
