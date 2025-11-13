@@ -236,10 +236,11 @@ class com_anm22_wb_editor_page
                 $containerId = $container['id'];
                 $this->containers[$containerId] = [
                     "id" => $containerId,
-                    "items" => []
+                    "items" => [],
+                    "defaultContainer" => false
                 ];
                 // Container default content flag
-                if ($container['containerDefault'] ?? false) {
+                if (($container['defaultContainer'] ?? false) || ($container['containerDefault'] ?? false)) {
                     $this->containers[$containerId]['defaultContainer'] = true;
 
                     foreach ($this->defaultPage['containers'] as $defaultContainer) {
